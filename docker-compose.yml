@@ -1,0 +1,27 @@
+services:
+  pocketbase-websites:
+    image: ghcr.io/muchobien/pocketbase:latest
+    container_name: pocketbase
+    restart: unless-stopped
+    environment:
+      PB_HOST: 0.0.0.0
+      PB_PORT: 8091
+      PB_ADMIN_EMAIL: ${PB_ADMIN_EMAIL}
+      PB_ADMIN_PASSWORD: ${PB_ADMIN_PASSWORD}
+      ENCRYPTION: ${PB_ENCRYPTION_KEY}
+      TZ: ${TZ}
+    env_file: .env
+    ports:
+      - '8091:8091'
+    volumes:
+      - ./pocketbase/pb_data:/pb_data
+      - ./pocketbase/pb_public:/pb_public
+      - ./pocketbase/pb_hooks:/pb_hooks
+    command: ['--encryptionEnv', 'ENCRYPTION']
+    healthcheck:
+      test:
+        ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:8091/api/health']
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
