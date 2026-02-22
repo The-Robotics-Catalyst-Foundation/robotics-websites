@@ -1,7 +1,7 @@
 services:
   pocketbase-websites:
     image: ghcr.io/muchobien/pocketbase:latest
-    container_name: pocketbase
+    container_name: pocketbase-websites
     restart: unless-stopped
     environment:
       PB_HOST: 0.0.0.0
